@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+env/
+ENV/
+uploads/*
+!uploads/.gitkeep
+evidence/*
+!evidence/.gitkeep
+accidents.db
+model/*.pt
+.DS_Store

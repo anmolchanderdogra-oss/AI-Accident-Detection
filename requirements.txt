@@ -1,0 +1,10 @@
+flask>=2.2.0
+opencv-python>=4.7.0
+numpy>=1.23.0
+Pillow>=9.0.0
+werkzeug>=2.2.0
+python-dotenv>=1.0.0
+requests>=2.28.0
+# Optional Deep Learning Model dependencies
+# ultralytics>=8.0.0
+# torch>=2.0.0
