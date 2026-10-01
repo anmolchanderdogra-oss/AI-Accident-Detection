@@ -1,0 +1,1197 @@
+/* ==========================================================================
+   AI ACCIDENT GUARD — BESPOKE MISSION CONTROL DESIGN SYSTEM
+   Authentic High-End Highway Safety & Emergency Operations Console
+   Engineered with Zero "AI Slop" — Pure Matte Carbon, Titanium, & Safety Amber
+   ========================================================================== */
+
+:root {
+  /* Carbon Graphite & Matte Titanium Foundation */
+  --bg-primary: #0A0D13;
+  --bg-secondary: #10141D;
+  --bg-tertiary: #171D29;
+  --bg-card: rgba(16, 20, 29, 0.90);
+  --bg-card-hover: rgba(23, 29, 41, 0.95);
+  --bg-glass: rgba(16, 20, 29, 0.85);
+
+  /* Highway Safety Standards (DOT Amber & Signal Red) */
+  --hazard-orange: #F97316;
+  --hazard-orange-hover: #EA580C;
+  --hazard-amber: #F59E0B;
+  --hazard-red: #EF4444;
+  --hazard-red-dark: #DC2626;
+
+  /* Tactical Utility Indicators */
+  --tech-blue: #38BDF8;
+  --safe-green: #10B981;
+
+  /* Typography — Matte Platinum & Technical Slate */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-accent: #FB923C;
+
+  /* Clean Technical Dividers & Outlines */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  --border-active: rgba(249, 115, 22, 0.40);
+  --border-alert: rgba(239, 68, 68, 0.45);
+
+  /* Shadows (Discreet, Matte Depth — No overblown blurry neon) */
+  --shadow-bento: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-subtle);
+  --shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border-active);
+  --shadow-alert: 0 8px 24px -2px rgba(239, 68, 68, 0.25), 0 0 0 1px var(--border-alert);
+
+  /* Sizing Tokens */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ==========================================================================
+   Base Structure
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle Technical Grid Matrix (Engineering Blueprint feel) */
+.cyber-grid-bg {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* ==========================================================================
+   Bento Cards & Control Panels
+   ========================================================================== */
+.bento-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-bento);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Top Subtle Highlight Bevel */
+.bento-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  pointer-events: none;
+}
+
+/* Active Alert Card Variant */
+.bento-alert {
+  border-color: var(--border-alert);
+  box-shadow: var(--shadow-alert);
+}
+
+.bento-alert:hover {
+  border-color: var(--hazard-red);
+}
+
+/* Telemetry Bento Grid - Strict Parallel Alignment */
+#telemetryRow {
+  display: grid !important;
+  align-items: stretch !important;
+}
+
+#telemetryRow > div {
+  height: 100% !important;
+  min-height: 175px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-self: stretch !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ==========================================================================
+   Badges & Micro-Readouts
+   ========================================================================== */
+.badge-neon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.2s ease;
+}
+
+.badge-orange {
+  background: rgba(249, 115, 22, 0.12);
+  color: var(--hazard-orange);
+  border: 1px solid rgba(249, 115, 22, 0.30);
+}
+
+.badge-crimson {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--hazard-red);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--safe-green);
+  border: 1px solid rgba(16, 185, 129, 0.30);
+}
+
+.badge-cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--tech-blue);
+  border: 1px solid rgba(56, 189, 248, 0.30);
+}
+
+/* ==========================================================================
+   Action Buttons (Crisp & Tactile)
+   ========================================================================== */
+.btn-cyber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  user-select: none;
+}
+
+.btn-cyber:active {
+  transform: scale(0.97);
+}
+
+/* Primary Highway Orange Action Button */
+.btn-hazard-orange {
+  background-color: var(--hazard-orange);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+.btn-hazard-orange:hover {
+  background-color: var(--hazard-orange-hover);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45);
+  transform: translateY(-1px);
+}
+
+/* Emergency Red Alert Button */
+.btn-cyber-crimson {
+  background-color: var(--hazard-red);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+.btn-cyber-crimson:hover {
+  background-color: var(--hazard-red-dark);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Graphite Glass Neutral Button */
+.btn-cyber-glass {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+}
+.btn-cyber-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   Floating Command Dock Navigation Bar
+   ========================================================================== */
+.floating-nav-capsule {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-subtle);
+}
+
+.floating-nav-capsule.scrolled {
+  background: rgba(16, 20, 29, 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--border-medium);
+}
+
+/* Kinetic Nav Links Track */
+.nav-links-track {
+  position: relative;
+}
+
+#navSlidingPill {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 0;
+}
+
+.nav-link-item {
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+/* Audio Equalizer Mini Bars */
+.eq-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+  width: 14px;
+}
+
+.eq-bar {
+  width: 2.5px;
+  background-color: var(--hazard-orange);
+  border-radius: 1px;
+  animation: eqBounce 1s ease-in-out infinite alternate;
+}
+
+.eq-bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
+.eq-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
+.eq-bar:nth-child(3) { height: 60%; animation-delay: 0.2s; }
+
+.eq-container.paused .eq-bar {
+  animation: none;
+  height: 20% !important;
+  opacity: 0.4;
+}
+
+@keyframes eqBounce {
+  0% { height: 25%; }
+  50% { height: 100%; }
+  100% { height: 45%; }
+}
+
+/* Mobile HUD Navigation Drawer */
+.mobile-hud-drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 13, 19, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.mobile-hud-drawer.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   Modals & Popups
+   ========================================================================== */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 8, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Toast Notification Engine
+   ========================================================================== */
+#toastContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.cyber-toast {
+  pointer-events: auto;
+  min-width: 320px;
+  max-width: 440px;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  transform: translateX(120%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.cyber-toast.show {
+  transform: translateX(0);
+}
+
+.cyber-toast.toast-alert {
+  border-color: var(--border-alert);
+  box-shadow: var(--shadow-alert);
+}
+
+/* ==========================================================================
+   Scrollbars & Clean Finish
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hazard-orange);
+}
+
+/* ==========================================================================
+   DAYLIGHT ARCHITECTURAL LIGHT MODE THEME
+   Engineered with Crisp Porcelain, Minimalist Slate & High-Contrast Safety Accents
+   ========================================================================== */
+body.theme-light {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F1F5F9;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-card-hover: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.90);
+
+  --hazard-orange: #EA580C;
+  --hazard-orange-hover: #C2410C;
+  --hazard-amber: #D97706;
+  --hazard-red: #DC2626;
+  --hazard-red-dark: #B91C1C;
+
+  --tech-blue: #0284C7;
+  --safe-green: #059669;
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-accent: #EA580C;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.12);
+  --border-active: rgba(234, 88, 12, 0.40);
+  --border-alert: rgba(220, 38, 38, 0.40);
+
+  --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.05), 0 6px 16px -2px rgba(0, 0, 0, 0.04), 0 0 0 1px var(--border-subtle);
+  --shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border-active);
+  --shadow-alert: 0 4px 14px rgba(220, 38, 38, 0.15), 0 0 0 1px var(--border-alert);
+
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Light Theme Grid Blueprint */
+body.theme-light.cyber-grid-bg,
+body.theme-light .cyber-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px) !important;
+}
+
+/* Floating Navbar in Light Mode */
+body.theme-light .floating-nav-capsule {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .floating-nav-capsule.scrolled {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 14px 35px -6px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+}
+
+body.theme-light #mainNavbar span.text-white:not(.nav-sos-btn):not(.nav-sos-btn *):not(#btnNavSosDispatch):not(#btnNavSosDispatch *),
+body.theme-light #mainNavbar strong.text-white:not(.nav-sos-btn):not(.nav-sos-btn *):not(#btnNavSosDispatch):not(#btnNavSosDispatch *) {
+  color: #0F172A !important;
+}
+
+/* SOS Dispatch Quick Action Button - Always Pure White Text on Signal Red */
+.nav-sos-btn,
+#btnNavSosDispatch {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.40) !important;
+  border-radius: 9999px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nav-sos-btn:hover,
+#btnNavSosDispatch:hover {
+  background: linear-gradient(135deg, #F87171 0%, #EF4444 100%) !important;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.55) !important;
+  transform: translateY(-1px);
+}
+
+.nav-sos-btn span,
+.nav-sos-btn strong,
+.nav-sos-btn .material-symbols-outlined,
+#btnNavSosDispatch span,
+#btnNavSosDispatch strong,
+#btnNavSosDispatch .material-symbols-outlined {
+  color: #FFFFFF !important;
+  fill: #FFFFFF !important;
+}
+
+body.theme-light .nav-links-track {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+}
+
+body.theme-light #navSlidingPill {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .nav-link-item {
+  color: #475569 !important;
+}
+
+body.theme-light .nav-link-item:hover {
+  color: #0F172A !important;
+}
+
+body.theme-light .nav-link-item.active,
+body.theme-light .nav-link-item.text-orange-400 {
+  color: #EA580C !important;
+  font-weight: 700 !important;
+}
+
+body.theme-light #mainNavbar .bg-white\/5 {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+body.theme-light #mainNavbar .text-slate-200,
+body.theme-light #mainNavbar .text-slate-300 {
+  color: #334155 !important;
+}
+
+/* Sidebar in Light Mode */
+body.theme-light aside {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-right: 1px solid #E2E8F0 !important;
+}
+
+body.theme-light aside a.text-slate-300 {
+  color: #334155 !important;
+}
+
+body.theme-light aside a:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+body.theme-light aside .bg-slate-900\/80 {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+body.theme-light aside span.text-white,
+body.theme-light aside strong.text-white {
+  color: #0F172A !important;
+}
+
+/* Bento Cards & Containers in Light Mode */
+body.theme-light .bento-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 6px 16px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .bento-card:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .bento-card h1,
+body.theme-light .bento-card h2,
+body.theme-light .bento-card h3,
+body.theme-light .bento-card h4,
+body.theme-light .bento-card h5,
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3,
+body.theme-light h4,
+body.theme-light h5,
+body.theme-light .text-white:not(.btn-hazard-orange):not(.btn-cyber-crimson):not(.bg-slate-900):not(.bg-slate-900 *):not(.badge-crimson):not(.nav-sos-btn):not(.nav-sos-btn *):not(#btnNavSosDispatch):not(#btnNavSosDispatch *) {
+  color: #0F172A !important;
+}
+
+body.theme-light .bg-slate-900,
+body.theme-light .bg-slate-900 *,
+body.theme-light .btn-hazard-orange,
+body.theme-light .btn-hazard-orange *,
+body.theme-light .btn-cyber-crimson,
+body.theme-light .btn-cyber-crimson *,
+body.theme-light .nav-sos-btn,
+body.theme-light .nav-sos-btn *,
+body.theme-light #btnNavSosDispatch,
+body.theme-light #btnNavSosDispatch * {
+  color: #FFFFFF !important;
+}
+
+/* Harmonious Text Contrast Rules */
+body.theme-light .text-slate-300,
+body.theme-light .text-slate-200 {
+  color: #334155 !important;
+}
+
+body.theme-light .text-slate-400 {
+  color: #64748B !important;
+}
+
+body.theme-light .text-orange-400,
+body.theme-light .text-orange-300 {
+  color: #EA580C !important;
+}
+
+body.theme-light .text-amber-400,
+body.theme-light .text-amber-300 {
+  color: #D97706 !important;
+}
+
+body.theme-light .text-rose-400,
+body.theme-light .text-red-400 {
+  color: #DC2626 !important;
+}
+
+body.theme-light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+body.theme-light .text-cyan-400 {
+  color: #0284C7 !important;
+}
+
+/* Subtle Inset Card Panels in Light Mode */
+body.theme-light .bg-black\/50,
+body.theme-light .bg-black\/40,
+body.theme-light .bg-black\/60,
+body.theme-light .bg-white\/5,
+body.theme-light .bg-white\/\[0\.02\] {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.theme-light .border-white\/10,
+body.theme-light .border-white\/20,
+body.theme-light .border-white\/5 {
+  border-color: #E2E8F0 !important;
+}
+
+/* High-Contrast Harmonious Badges for Light Mode */
+body.theme-light .badge-orange {
+  background: #FFF7ED !important;
+  color: #C2410C !important;
+  border: 1px solid #FFEDD5 !important;
+}
+
+body.theme-light .badge-crimson {
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+  border: 1px solid #FEE2E2 !important;
+}
+
+body.theme-light .badge-emerald {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border: 1px solid #D1FAE5 !important;
+}
+
+body.theme-light .badge-cyan {
+  background: #F0F9FF !important;
+  color: #0369A1 !important;
+  border: 1px solid #E0F2FE !important;
+}
+
+/* Camera Pill Controls */
+body.theme-light .btn-cam-mode {
+  color: #475569 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+body.theme-light .btn-cam-mode:hover {
+  color: #0F172A !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.theme-light .btn-cam-mode.active,
+body.theme-light .btn-cam-mode.bg-orange-500\/25,
+body.theme-light .btn-cam-mode.bg-orange-500\/15 {
+  color: #EA580C !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid #CBD5E1 !important;
+  font-weight: 700 !important;
+}
+
+/* Buttons in Light Mode */
+body.theme-light .btn-cyber-glass {
+  background: #F1F5F9 !important;
+  color: #1E293B !important;
+  border-color: #CBD5E1 !important;
+}
+
+body.theme-light .btn-cyber-glass:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
+}
+
+body.theme-light .btn-hazard-orange,
+body.theme-light .btn-cyber-crimson,
+body.theme-light .btn-cyber-primary {
+  color: #FFFFFF !important;
+}
+
+body.theme-light .filter-btn:not(.btn-hazard-orange) {
+  background: #F1F5F9 !important;
+  color: #334155 !important;
+  border-color: #E2E8F0 !important;
+}
+
+body.theme-light .filter-btn.btn-hazard-orange {
+  background: #EA580C !important;
+  color: #FFFFFF !important;
+}
+
+/* Incident Log Rows */
+body.theme-light .incident-item,
+body.theme-light #incidentsList > div {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #0F172A !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light #incidentsList > div:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Video HUD Overlays — Crisp Dark Glass with White Text */
+body.theme-light #hudConfidence,
+body.theme-light #hudGpsText {
+  background: rgba(15, 23, 42, 0.80) !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+}
+
+/* Modals & Inputs in Light Mode */
+body.theme-light .modal-backdrop {
+  background: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+body.theme-light .modal-backdrop .bento-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.theme-light input[type="text"],
+body.theme-light input[type="email"],
+body.theme-light input[type="number"],
+body.theme-light select {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+body.theme-light input:focus {
+  border-color: #EA580C !important;
+  background: #FFFFFF !important;
+}
+
+body.theme-light kbd {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #EA580C !important;
+}
+
+body.theme-light ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+body.theme-light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+body.theme-light ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ==========================================================================
+   INDUSTRIAL DARK MODE THEME SUITE
+   Engineered with Deep Matte Carbon, Crisp Slate & Safety Amber Accents
+   ========================================================================== */
+html.dark,
+html.dark body,
+body.theme-industrial,
+body:not(.theme-light) {
+  background-color: #0A0D13 !important;
+  color: #F8FAFC !important;
+}
+
+html.dark.cyber-grid-bg,
+html.dark .cyber-grid-bg,
+body.theme-industrial.cyber-grid-bg,
+body.theme-industrial .cyber-grid-bg,
+body:not(.theme-light).cyber-grid-bg,
+body:not(.theme-light) .cyber-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px) !important;
+}
+
+/* Dark Mode Navigation Bar */
+html.dark .floating-nav-capsule,
+body.theme-industrial .floating-nav-capsule,
+body:not(.theme-light) .floating-nav-capsule {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border: 1px solid rgba(249, 115, 22, 0.30) !important;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65) !important;
+}
+
+html.dark .floating-nav-capsule.scrolled,
+body.theme-industrial .floating-nav-capsule.scrolled,
+body:not(.theme-light) .floating-nav-capsule.scrolled {
+  background: rgba(10, 14, 23, 0.96) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.80) !important;
+}
+
+html.dark #mainNavbar span.text-white,
+html.dark #mainNavbar strong.text-white,
+body.theme-industrial #mainNavbar span.text-white,
+body.theme-industrial #mainNavbar strong.text-white,
+body:not(.theme-light) #mainNavbar span.text-white,
+body:not(.theme-light) #mainNavbar strong.text-white {
+  color: #FFFFFF !important;
+}
+
+html.dark .nav-links-track,
+body.theme-industrial .nav-links-track,
+body:not(.theme-light) .nav-links-track {
+  background: rgba(0, 0, 0, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+html.dark #navSlidingPill,
+body.theme-industrial #navSlidingPill,
+body:not(.theme-light) #navSlidingPill {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+html.dark .nav-link-item,
+body.theme-industrial .nav-link-item,
+body:not(.theme-light) .nav-link-item {
+  color: #94A3B8 !important;
+}
+
+html.dark .nav-link-item:hover,
+body.theme-industrial .nav-link-item:hover,
+body:not(.theme-light) .nav-link-item:hover {
+  color: #FFFFFF !important;
+}
+
+html.dark .nav-link-item.active,
+body.theme-industrial .nav-link-item.active,
+body:not(.theme-light) .nav-link-item.active {
+  color: #FB923C !important;
+  font-weight: 700 !important;
+}
+
+html.dark #mainNavbar .bg-slate-100,
+body.theme-industrial #mainNavbar .bg-slate-100,
+body:not(.theme-light) #mainNavbar .bg-slate-100 {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #E2E8F0 !important;
+}
+
+/* Dark Mode Sidebar */
+html.dark aside,
+body.theme-industrial aside,
+body:not(.theme-light) aside {
+  background: rgba(10, 14, 23, 0.95) !important;
+  border-color: rgba(249, 115, 22, 0.20) !important;
+}
+
+html.dark aside a,
+body.theme-industrial aside a,
+body:not(.theme-light) aside a {
+  color: #CBD5E1 !important;
+}
+
+html.dark aside a:hover,
+body.theme-industrial aside a:hover,
+body:not(.theme-light) aside a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark aside a.bg-slate-900,
+body.theme-industrial aside a.bg-slate-900,
+body:not(.theme-light) aside a.bg-slate-900 {
+  background: rgba(234, 88, 12, 0.20) !important;
+  color: #FB923C !important;
+  border: 1px solid rgba(249, 115, 22, 0.35) !important;
+}
+
+html.dark aside .bg-slate-50,
+body.theme-industrial aside .bg-slate-50,
+body:not(.theme-light) aside .bg-slate-50 {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(249, 115, 22, 0.20) !important;
+}
+
+html.dark aside span.text-slate-500,
+body.theme-industrial aside span.text-slate-500,
+body:not(.theme-light) aside span.text-slate-500 {
+  color: #94A3B8 !important;
+}
+
+/* Dark Mode Bento Cards */
+html.dark .bento-card,
+body.theme-industrial .bento-card,
+body:not(.theme-light) .bento-card {
+  background: rgba(16, 20, 29, 0.90) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+
+html.dark .bento-card:hover,
+body.theme-industrial .bento-card:hover,
+body:not(.theme-light) .bento-card:hover {
+  border-color: rgba(249, 115, 22, 0.35) !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(249, 115, 22, 0.35) !important;
+}
+
+html.dark .bento-card h1,
+html.dark .bento-card h2,
+html.dark .bento-card h3,
+html.dark .bento-card h4,
+html.dark .bento-card h5,
+body.theme-industrial .bento-card h1,
+body.theme-industrial .bento-card h2,
+body.theme-industrial .bento-card h3,
+body.theme-industrial .bento-card h4,
+body.theme-industrial .bento-card h5,
+body:not(.theme-light) .bento-card h1,
+body:not(.theme-light) .bento-card h2,
+body:not(.theme-light) .bento-card h3,
+body:not(.theme-light) .bento-card h4,
+body:not(.theme-light) .bento-card h5 {
+  color: #FFFFFF !important;
+}
+
+html.dark .text-slate-900,
+body.theme-industrial .text-slate-900,
+body:not(.theme-light) .text-slate-900 {
+  color: #FFFFFF !important;
+}
+
+html.dark .text-slate-700,
+body.theme-industrial .text-slate-700,
+body:not(.theme-light) .text-slate-700 {
+  color: #CBD5E1 !important;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500,
+body.theme-industrial .text-slate-600,
+body.theme-industrial .text-slate-500,
+body:not(.theme-light) .text-slate-600,
+body:not(.theme-light) .text-slate-500 {
+  color: #94A3B8 !important;
+}
+
+/* Dark Mode Inset Panels & Borders */
+html.dark .bg-slate-50,
+html.dark .bg-slate-100,
+body.theme-industrial .bg-slate-50,
+body.theme-industrial .bg-slate-100,
+body:not(.theme-light) .bg-slate-50,
+body:not(.theme-light) .bg-slate-100 {
+  background: rgba(0, 0, 0, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #E2E8F0 !important;
+}
+
+html.dark .border-slate-200,
+body.theme-industrial .border-slate-200,
+body:not(.theme-light) .border-slate-200 {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Dark Mode Primary Action Buttons */
+html.dark .bg-slate-900.btn-cyber,
+html.dark #btnWebcamToggleBar,
+html.dark #btnStartWebcam,
+body.theme-industrial .bg-slate-900.btn-cyber,
+body.theme-industrial #btnWebcamToggleBar,
+body.theme-industrial #btnStartWebcam,
+body:not(.theme-light) .bg-slate-900.btn-cyber,
+body:not(.theme-light) #btnWebcamToggleBar,
+body:not(.theme-light) #btnStartWebcam {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(249, 115, 22, 0.5) !important;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.35) !important;
+}
+
+html.dark .filter-btn.bg-slate-900,
+body.theme-industrial .filter-btn.bg-slate-900,
+body:not(.theme-light) .filter-btn.bg-slate-900 {
+  background: #EA580C !important;
+  color: #FFFFFF !important;
+  border-color: #EA580C !important;
+}
+
+html.dark .btn-cyber-glass,
+body.theme-industrial .btn-cyber-glass,
+body:not(.theme-light) .btn-cyber-glass {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+html.dark .btn-cyber-glass:hover,
+body.theme-industrial .btn-cyber-glass:hover,
+body:not(.theme-light) .btn-cyber-glass:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Dark Mode Camera Pills */
+html.dark .btn-cam-mode,
+body.theme-industrial .btn-cam-mode,
+body:not(.theme-light) .btn-cam-mode {
+  color: #94A3B8 !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+html.dark .btn-cam-mode:hover,
+body.theme-industrial .btn-cam-mode:hover,
+body:not(.theme-light) .btn-cam-mode:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .btn-cam-mode.active,
+body.theme-industrial .btn-cam-mode.active,
+body:not(.theme-light) .btn-cam-mode.active {
+  color: #FB923C !important;
+  background: rgba(249, 115, 22, 0.20) !important;
+  border: 1px solid rgba(249, 115, 22, 0.40) !important;
+}
+
+/* Dark Mode Badges */
+html.dark .badge-orange,
+body.theme-industrial .badge-orange,
+body:not(.theme-light) .badge-orange {
+  background: rgba(249, 115, 22, 0.15) !important;
+  color: #FB923C !important;
+  border: 1px solid rgba(249, 115, 22, 0.35) !important;
+}
+
+html.dark .badge-emerald,
+body.theme-industrial .badge-emerald,
+body:not(.theme-light) .badge-emerald {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+html.dark .badge-crimson,
+body.theme-industrial .badge-crimson,
+body:not(.theme-light) .badge-crimson {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}
+
+html.dark .badge-cyan,
+body.theme-industrial .badge-cyan,
+body:not(.theme-light) .badge-cyan {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+
+/* Dark Mode 3D Viewport HUD Overlays */
+html.dark #canvas3d,
+body.theme-industrial #canvas3d,
+body:not(.theme-light) #canvas3d {
+  background: #0A0E17 !important;
+}
+
+/* Dark Mode Incident Log List */
+html.dark .incident-item,
+html.dark #incidentsList > div,
+body.theme-industrial .incident-item,
+body.theme-industrial #incidentsList > div,
+body:not(.theme-light) .incident-item,
+body:not(.theme-light) #incidentsList > div {
+  background: rgba(16, 20, 29, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40) !important;
+}
+
+html.dark #incidentsList > div:hover,
+body.theme-industrial #incidentsList > div:hover,
+body:not(.theme-light) #incidentsList > div:hover {
+  background: rgba(23, 29, 41, 0.95) !important;
+  border-color: rgba(249, 115, 22, 0.35) !important;
+}
+
+/* Dark Mode Modals & Form Controls */
+html.dark .modal-backdrop,
+body.theme-industrial .modal-backdrop,
+body:not(.theme-light) .modal-backdrop {
+  background: rgba(0, 0, 0, 0.80) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+html.dark .modal-backdrop .bento-card,
+body.theme-industrial .modal-backdrop .bento-card,
+body:not(.theme-light) .modal-backdrop .bento-card {
+  background: #10141D !important;
+  border-color: rgba(249, 115, 22, 0.40) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.80) !important;
+}
+
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="number"],
+html.dark select,
+body.theme-industrial input[type="text"],
+body.theme-industrial input[type="email"],
+body.theme-industrial input[type="number"],
+body.theme-industrial select,
+body:not(.theme-light) input[type="text"],
+body:not(.theme-light) input[type="email"],
+body:not(.theme-light) input[type="number"],
+body:not(.theme-light) select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark input:focus,
+body.theme-industrial input:focus,
+body:not(.theme-light) input:focus {
+  border-color: #F97316 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark kbd,
+body.theme-industrial kbd,
+body:not(.theme-light) kbd {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #FB923C !important;
+}
+
+html.dark ::-webkit-scrollbar-track,
+body.theme-industrial ::-webkit-scrollbar-track,
+body:not(.theme-light) ::-webkit-scrollbar-track {
+  background: #0A0D13;
+}
+
+html.dark ::-webkit-scrollbar-thumb,
+body.theme-industrial ::-webkit-scrollbar-thumb,
+body:not(.theme-light) ::-webkit-scrollbar-thumb {
+  background: #1E293B;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover,
+body.theme-industrial ::-webkit-scrollbar-thumb:hover,
+body:not(.theme-light) ::-webkit-scrollbar-thumb:hover {
+  background: #F97316;
+}

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>AI Accident Guard — Autonomous Highway Safety & Emergency Command</title>
+  
+  <!-- Modern Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  
+  <!-- 3D Animation & Physics Libraries (Three.js, GSAP 3.12) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Tailwind CSS with Industrial Gunmetal & Hazard Orange Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "gunmetal": "#0A0E17",
+            "slate-card": "#0F172A",
+            "slate-elevated": "#1E293B",
+            "hazard-orange": "#F97316",
+            "hazard-blaze": "#FB923C",
+            "hazard-deep": "#EA580C",
+            "hazard-amber": "#FBBF24",
+            "tech-cyan": "#38BDF8",
+            "safe-emerald": "#22C55E",
+            "hazard-red": "#EF4444"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Master Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+
+<body class="font-sans antialiased cyber-grid-bg selection:bg-orange-500/30 selection:text-orange-900 theme-light">
+
+  <!-- Top Floating Capsule HUD Navigation Bar -->
+  <header id="mainNavbar" class="fixed top-3 left-3 right-3 lg:left-6 lg:right-6 z-50 transition-all duration-300">
+    <div class="floating-nav-capsule w-full h-[62px] px-3.5 sm:px-6 bg-[#0F172A]/85 backdrop-blur-2xl border border-orange-500/30 rounded-2xl flex items-center justify-between gap-3 shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
+      
+      <!-- Brand & Sector Indicator -->
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="#dashboard" class="flex items-center gap-2.5 group shrink-0">
+          <div class="w-9 h-9 rounded-xl bg-slate-900 text-white dark:bg-orange-600 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform shrink-0">
+            <span class="material-symbols-outlined text-[20px] text-orange-400">traffic</span>
+          </div>
+          <div class="flex flex-col whitespace-nowrap">
+            <span class="font-bold text-[14px] sm:text-[15px] tracking-tight uppercase text-slate-900 dark:text-white select-none whitespace-nowrap">
+              AI ACCIDENT GUARD
+            </span>
+            <span class="text-[9px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase -mt-0.5 whitespace-nowrap">SECTOR 101-NW • SAFETY CORE</span>
+          </div>
+        </a>
+
+        <div class="hidden 2xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-orange-500/10 border border-slate-200 dark:border-orange-500/30 font-mono text-[11px] whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-slate-700 dark:text-orange-300 font-bold">GRID: 60 FPS</span>
+        </div>
+      </div>
+
+      <!-- Center Kinetic Navigation Links with Sliding Pill Indicator -->
+      <nav class="hidden lg:flex items-center bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 p-1 rounded-full text-[13px] font-semibold nav-links-track shrink-0" id="navTrack">
+        <div id="navSlidingPill"></div>
+        <a href="#dashboard" class="nav-link-item px-3.5 py-1.5 text-slate-900 dark:text-orange-400 font-bold transition-all whitespace-nowrap" data-target="dashboard">Overview</a>
+        <a href="#radar-3d-section" class="nav-link-item px-3.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all whitespace-nowrap" data-target="radar-3d-section">3D Digital Twin</a>
+        <a href="#video-feed-section" class="nav-link-item px-3.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all whitespace-nowrap" data-target="video-feed-section">Live Vision</a>
+        <a href="#incidents-section" class="nav-link-item px-3.5 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all whitespace-nowrap" data-target="incidents-section">Incident Log</a>
+      </nav>
+
+      <!-- Header Controls Group -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 pr-0.5 sm:pr-1">
+        <!-- Live Military Digital Clock -->
+        <div class="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 font-mono text-[11px] text-slate-700 dark:text-orange-300 whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+          <span id="live-clock">12:00:00 PM</span>
+        </div>
+
+        <!-- Live Operational Status Chip -->
+        <div class="hidden 2xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-white/5 border border-emerald-200 dark:border-white/10 text-emerald-800 dark:text-slate-300 font-mono text-[11px] whitespace-nowrap">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>ONLINE</span>
+        </div>
+
+        <!-- Audio Synthesizer with Equalizer Mini Bars -->
+        <button id="btnAudioToggle" class="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-[12px] font-bold hover:bg-slate-200 dark:hover:bg-white/10 hover:border-slate-300 transition-all shrink-0" title="Toggle Siren & Alert Audio [M]">
+          <div class="eq-container" id="navEqualizer">
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+          </div>
+          <span class="hidden 2xl:inline text-[11px] font-mono text-slate-700 dark:text-orange-400" id="audioLabel">AUDIO ON</span>
+        </button>
+
+        <!-- Keyboard Shortcuts Trigger [?] -->
+        <button onclick="openShortcutsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:text-orange-600 dark:hover:text-orange-400 text-[12px] font-mono transition-all shrink-0" title="Keyboard Shortcuts [?]">
+          ?
+        </button>
+
+        <!-- Light / Dark Mode Toggle Button -->
+        <button onclick="toggleLightDarkMode()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:text-orange-600 dark:hover:text-orange-400 transition-all shrink-0" title="Toggle Light / Dark Mode [D]">
+          <span class="material-symbols-outlined text-[17px]" id="themeModeIcon">dark_mode</span>
+        </button>
+
+        <!-- Settings Modal Trigger -->
+        <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-orange-500/20 hover:border-orange-500 transition-all shrink-0" title="Configure AI & Responders [S]">
+          <span class="material-symbols-outlined text-[17px]">tune</span>
+        </button>
+
+        <!-- Quick SOS Dispatch Button -->
+        <button id="btnNavSosDispatch" onclick="triggerEmergencyAlertNow()" class="nav-sos-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-white text-[11px] font-extrabold tracking-wider shadow-sm active:scale-95 transition-all shrink-0 whitespace-nowrap ml-1" title="Simulate Collision Dispatch [T]">
+          <span class="material-symbols-outlined text-[15px] text-white animate-pulse">e911_emergency</span>
+          <span class="text-white font-extrabold">SOS DISPATCH</span>
+        </button>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button id="btnMobileMenu" onclick="toggleMobileDrawer()" class="lg:hidden w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-orange-600 dark:hover:text-orange-400 transition-colors shrink-0" title="Toggle Mobile Menu">
+          <span class="material-symbols-outlined text-[20px]" id="mobileMenuIcon">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Off-Canvas Navigation Drawer -->
+  <div id="mobileDrawer" class="mobile-hud-drawer">
+    <div class="flex items-center justify-between pb-6 border-b border-white/10">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-bold">
+          <span class="material-symbols-outlined text-[20px]">traffic</span>
+        </div>
+        <span class="font-extrabold text-[15px] text-white">AI ACCIDENT GUARD</span>
+      </div>
+      <button onclick="toggleMobileDrawer()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <div class="flex flex-col gap-2 py-6 text-lg font-bold">
+      <a href="#dashboard" onclick="toggleMobileDrawer()" class="px-4 py-3 rounded-xl bg-orange-500/15 text-orange-400 border border-orange-500/30 flex items-center gap-3">
+        <span class="material-symbols-outlined">grid_view</span> Overview Dashboard
+      </a>
+      <a href="#radar-3d-section" onclick="toggleMobileDrawer()" class="px-4 py-3 rounded-xl hover:bg-white/5 text-slate-300 flex items-center gap-3">
+        <span class="material-symbols-outlined text-orange-400">view_in_ar</span> 3D Digital Twin
+      </a>
+      <a href="#video-feed-section" onclick="toggleMobileDrawer()" class="px-4 py-3 rounded-xl hover:bg-white/5 text-slate-300 flex items-center gap-3">
+        <span class="material-symbols-outlined text-amber-400">videocam</span> Live Vision Studio
+      </a>
+      <a href="#incidents-section" onclick="toggleMobileDrawer()" class="px-4 py-3 rounded-xl hover:bg-white/5 text-slate-300 flex items-center gap-3">
+        <span class="material-symbols-outlined text-rose-400">car_crash</span> Incident Audit Log
+      </a>
+      <button onclick="toggleMobileDrawer(); openSettingsModal();" class="px-4 py-3 rounded-xl hover:bg-white/5 text-slate-300 flex items-center gap-3 text-left w-full">
+        <span class="material-symbols-outlined text-cyan-400">tune</span> Configuration & Contacts
+      </button>
+    </div>
+
+    <div class="mt-auto pt-6 border-t border-white/10 flex flex-col gap-3">
+      <button onclick="triggerEmergencyAlertNow(); toggleMobileDrawer();" class="btn-cyber btn-cyber-crimson py-3 w-full">
+        <span class="material-symbols-outlined text-[18px]">e911_emergency</span>
+        <span>SOS EMERGENCY DISPATCH</span>
+      </button>
+      <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+        <span>FPS: <strong class="text-orange-400">60.0</strong></span>
+        <span>SECTOR: <strong class="text-white">101-NW</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-xl border-r border-slate-200 dark:border-orange-500/20 z-40 hidden md:flex flex-col justify-between py-6 px-3">
+    <div class="flex flex-col gap-1">
+      <div class="px-3 py-1.5 text-[11px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">SAFETY OPERATIONS</div>
+      <nav class="flex flex-col gap-1 text-[13px] font-semibold">
+        <a href="#dashboard" class="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 text-white dark:bg-orange-600/15 dark:text-orange-400 dark:border dark:border-orange-500/30 rounded-xl shadow-xs">
+          <span class="material-symbols-outlined text-[20px] text-orange-400">grid_view</span>Overview Dashboard
+        </a>
+        <a href="#radar-3d-section" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-orange-500 dark:text-orange-400">view_in_ar</span>3D Digital Twin
+        </a>
+        <a href="#video-feed-section" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-amber-500 dark:text-amber-400">videocam</span>Live Vision Studio
+        </a>
+        <a href="#incidents-section" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-rose-500 dark:text-rose-400">car_crash</span>Incident Audit Log
+        </a>
+        <button onclick="openSettingsModal()" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 dark:hover:text-white transition-colors text-left w-full">
+          <span class="material-symbols-outlined text-[20px] text-sky-500 dark:text-cyan-400">settings_suggest</span>Settings & Alerts
+        </button>
+      </nav>
+    </div>
+
+    <!-- Vision Core Telemetry Badge in Sidebar -->
+    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-orange-500/20 flex flex-col gap-2">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400">INFERENCE ENGINE</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+      </div>
+      <div class="text-[15px] font-extrabold text-slate-900 dark:text-white" id="sidebarModelName">YOLOv11 & CV Shockwave</div>
+      <p class="text-[11px] font-mono text-slate-600 dark:text-orange-300/80 font-medium" id="sidebarThresholdText">Confidence Threshold: 70%</p>
+      
+      <div class="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+        <span>FPS: <strong class="text-slate-900 dark:text-orange-400" id="liveFpsIndicator">60.0</strong></span>
+        <span>LATENCY: <strong class="text-amber-600 dark:text-amber-400 font-bold">28ms</strong></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Space -->
+  <div class="md:pl-64">
+    <main class="w-full min-h-screen pt-20 pb-16 px-4 md:px-8 max-w-[1700px] mx-auto flex flex-col gap-8" id="dashboard">
+
+      <!-- Subheader & Station Telemetry Bar -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-orange-500/20">
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-md bg-orange-50 text-orange-700 font-mono text-[11px] font-bold uppercase tracking-wider border border-orange-200 dark:bg-orange-500/20 dark:text-orange-300 dark:border-orange-500/40">HIGHWAY SECTOR 101-NW</span>
+            <span class="text-[12px] font-mono text-slate-500 dark:text-slate-400">Autonomous Safety Corridor</span>
+          </div>
+          <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-1">Autonomous Road Collision & Incident Command Center</h1>
+        </div>
+
+        <!-- Telemetry Chips -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 font-mono text-[12px] text-slate-700 dark:bg-white/5 dark:border-white/10 dark:text-slate-300">
+            <span class="material-symbols-outlined text-[16px] text-slate-600 dark:text-orange-400">satellite_alt</span>
+            <span id="gpsStatusChip">GPS: Acquiring Fix...</span>
+          </div>
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 font-mono text-[12px] text-slate-700 dark:bg-orange-500/10 dark:border-orange-500/30 dark:text-orange-300">
+            <span class="material-symbols-outlined text-[16px] text-emerald-600 dark:text-orange-400">sensors</span>
+            <span>LIDAR DEPTH: ONLINE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 4-Card Bento Telemetry Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch" id="telemetryRow">
+        
+        <!-- Card 1: System Operational State -->
+        <div class="bento-card p-6 flex flex-col justify-between h-full min-h-[175px]">
+          <div class="flex items-center justify-between min-h-[32px]">
+            <span class="text-[11px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">SYSTEM STATE</span>
+            <span class="badge-neon badge-emerald" id="mainStatusBadge">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              ACTIVE MONITORING
+            </span>
+          </div>
+          <div class="mt-4 pt-2">
+            <div class="text-[20px] font-extrabold text-slate-900 dark:text-white tracking-tight" id="statusSubhead">AUTONOMOUS CORRIDOR</div>
+            <p class="text-[12px] text-slate-600 dark:text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600 dark:text-orange-400">video_camera_front</span>
+              <span>OpenCV 60fps Shockwave Core</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2: Collision Probability Score -->
+        <div class="bento-card p-6 flex flex-col justify-between h-full min-h-[175px]">
+          <div class="flex items-center justify-between min-h-[32px]">
+            <span class="text-[11px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">COLLISION PROBABILITY</span>
+            <span class="badge-neon badge-cyan" id="probabilityBadge">
+              <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+              NORMAL
+            </span>
+          </div>
+          <div class="mt-4 pt-2 flex items-baseline justify-between">
+            <div>
+              <div class="text-[34px] font-extrabold text-slate-900 dark:text-white tracking-tight font-mono" id="probabilityScore">0%</div>
+              <p class="text-[12px] text-slate-500 dark:text-slate-400">Baseline Nominal</p>
+            </div>
+            <div class="text-right font-mono">
+              <span class="text-[11px] text-orange-600 dark:text-orange-400 font-bold" id="peakProbabilityText">THRESHOLD: 70%</span>
+              <p class="text-[10px] text-slate-400">Auto-Alert Trigger</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Total Recorded Incidents -->
+        <div class="bento-card p-6 flex flex-col justify-between h-full min-h-[175px]">
+          <div class="flex items-center justify-between min-h-[32px]">
+            <span class="text-[11px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">TOTAL INCIDENTS LOGGED</span>
+            <span class="material-symbols-outlined text-slate-600 dark:text-amber-400 text-[22px]">calendar_today</span>
+          </div>
+          <div class="mt-4 pt-2">
+            <div class="text-[34px] font-extrabold text-slate-900 dark:text-white tracking-tight font-mono" id="statIncidents">0</div>
+            <p class="text-[12px] text-slate-500 dark:text-slate-400 mt-1 font-mono" id="incidentSubStats">Persisted to SQLite Audit Trail</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Dispatch Relay -->
+        <div class="bento-card p-6 flex flex-col justify-between h-full min-h-[175px]">
+          <div class="flex items-center justify-between min-h-[32px]">
+            <span class="text-[11px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider">EMERGENCY RELAY</span>
+            <span class="badge-neon badge-emerald">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              CONNECTED
+            </span>
+          </div>
+          <div class="mt-4 pt-2">
+            <div class="text-[20px] font-extrabold text-slate-900 dark:text-orange-400 tracking-tight">ACTIVE DISPATCH</div>
+            <p class="text-[12px] text-slate-500 dark:text-slate-400 mt-1 font-mono" id="statAlertsDesc">0 Alerts Dispatched</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3D Spatial Roadway Digital Twin Section (Three.js WebGL in Hazard Orange & Slate) -->
+      <section class="bento-card p-6 border-slate-200 dark:border-orange-500/30 relative overflow-hidden" id="radar-3d-section">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-200 dark:bg-orange-500/15 dark:border-orange-500/40 text-[11px] font-mono font-bold dark:text-orange-300 uppercase tracking-wider">
+              <span class="material-symbols-outlined text-[14px]">view_in_ar</span> Three.js WebGL Digital Twin & Spatial Radar
+            </div>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white mt-1">Multi-Lane Highway Spatial Twin & Collision Radar</h2>
+          </div>
+
+          <!-- Camera Angle & FX Controls Toolbar -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center bg-slate-100 border border-slate-200 dark:bg-black/50 dark:border-white/10 rounded-full p-1 text-[11px] font-mono">
+              <button onclick="setRadarCameraMode('drone')" class="btn-cam-mode px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all bg-white dark:bg-orange-500/25 border border-slate-300 dark:border-orange-500 text-orange-600 dark:text-orange-400 font-semibold shadow-xs" data-mode="drone">
+                🛸 Drone Orbit
+              </button>
+              <button onclick="setRadarCameraMode('satellite')" class="btn-cam-mode px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all" data-mode="satellite">
+                🛰️ Satellite
+              </button>
+              <button onclick="setRadarCameraMode('chase')" class="btn-cam-mode px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all" data-mode="chase">
+                🏎️ Chase Cam
+              </button>
+              <button onclick="setRadarCameraMode('lidar')" class="btn-cam-mode px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all" data-mode="lidar">
+                🕸️ LIDAR
+              </button>
+            </div>
+
+            <!-- Test Shockwave Button -->
+            <button onclick="trigger3DCollisionEffect(0, 0)" class="btn-cyber btn-hazard-orange text-[12px] py-1.5 px-4 shadow-[0_0_18px_rgba(249,115,22,0.35)]">
+              <span class="material-symbols-outlined text-[16px]">explosion</span>
+              <span>Test 3D Shockwave</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3D Canvas Viewport -->
+        <div class="relative w-full h-80 md:h-[420px] rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#0A0E17] border border-slate-200 dark:border-orange-500/20 shadow-xl group">
+          <canvas id="canvas3d" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+          <!-- Top-Left Telemetry Overlay -->
+          <div class="absolute top-4 left-4 bg-white/90 dark:bg-[#0A0E17]/90 backdrop-blur-md p-3 rounded-xl border border-slate-200 dark:border-orange-500/30 text-[11px] font-mono text-slate-800 dark:text-orange-300 shadow-sm pointer-events-none flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-orange-400 animate-ping"></span>
+              <span class="font-bold text-slate-900 dark:text-orange-300">LIDAR ROADWAY SCAN: ACTIVE</span>
+            </div>
+            <div class="text-slate-500 dark:text-slate-400">DEPTH VECTOR: PERSPECTIVE 3D</div>
+            <div class="text-slate-500 dark:text-slate-400">DRAG: ORBIT | SCROLL: ZOOM</div>
+          </div>
+
+          <!-- Top-Right Live Spatial Markers -->
+          <div class="absolute top-4 right-4 bg-white/90 dark:bg-[#0A0E17]/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-700 dark:text-slate-300 shadow-sm pointer-events-none flex items-center gap-3">
+            <span>SECTOR: <strong class="text-slate-900 dark:text-orange-400">HWY-101</strong></span>
+            <span>BEARING: <strong class="text-amber-600 dark:text-amber-400">045° NE</strong></span>
+          </div>
+
+          <!-- Bottom Coordinates Strip -->
+          <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] font-mono text-slate-600 dark:text-slate-400 pointer-events-none">
+            <span class="bg-white/85 dark:bg-black/70 px-2.5 py-0.5 rounded border border-slate-200/80 dark:border-transparent shadow-xs">LAT: 37.7749° N | LON: 122.4194° W</span>
+            <span class="bg-white/85 dark:bg-black/70 px-2.5 py-0.5 rounded text-emerald-600 dark:text-orange-400 font-bold border border-slate-200/80 dark:border-transparent shadow-xs">HARDWARE 60 FPS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Layout Split: Live Video Studio (8 Cols) & Warning Dispatch (4 Cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" id="video-feed-section">
+
+        <!-- Left 8 Columns: Live AI Video Feed & Controls -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
+          <div class="bento-card overflow-hidden flex flex-col">
+            
+            <!-- Video Header -->
+            <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02]">
+              <div class="flex items-center gap-2.5">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-[16px] font-extrabold text-slate-900 dark:text-white tracking-tight" id="streamTitle">Road Monitoring Stream — Northbound Highway Intersection</span>
+              </div>
+              <div class="flex items-center gap-2 font-mono text-[11px]">
+                <span class="bg-slate-100 border border-slate-200 text-slate-600 dark:bg-white/5 dark:border-white/10 dark:text-orange-400 px-2.5 py-1 rounded-full font-bold" id="hudSource">SRC: IDLE</span>
+              </div>
+            </div>
+
+            <!-- Video Viewport -->
+            <div class="relative w-full aspect-[16/9] bg-[#070B14] overflow-hidden select-none group" id="videoDropZone">
+              <video id="mainVideoPlayer" class="w-full h-full object-cover block" autoplay playsinline muted style="display:none;"></video>
+              <canvas id="videoOverlayCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-10 block" style="display:none;"></canvas>
+
+              <!-- Upload Progress Overlay -->
+              <div id="uploadProgressContainer" class="absolute bottom-6 left-6 right-6 z-30 hidden bg-[#0A0E17]/90 backdrop-blur-md p-4 rounded-xl border border-orange-500/40 shadow-2xl">
+                <div class="flex justify-between items-center text-[12px] font-mono font-bold text-white mb-2">
+                  <span id="uploadProgressLabel" class="flex items-center gap-2">
+                    <span class="animate-spin material-symbols-outlined text-[16px] text-orange-400">sync</span>
+                    <span>Processing Frames with YOLO & Shockwave...</span>
+                  </span>
+                  <span id="uploadProgressPercent" class="text-orange-400">0%</span>
+                </div>
+                <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div id="uploadProgressBar" class="bg-orange-500 h-full w-0 transition-all duration-300 rounded-full"></div>
+                </div>
+              </div>
+
+              <!-- Empty State Placeholder -->
+              <div id="emptyVideoState" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-400">
+                <div class="w-20 h-20 rounded-2xl bg-orange-500/10 border border-orange-500/25 flex items-center justify-center text-orange-400 mb-4 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
+                  <span class="material-symbols-outlined text-[42px]">videocam</span>
+                </div>
+                <h3 class="text-lg font-extrabold text-white">No Video Stream Connected</h3>
+                <p class="text-[13px] max-w-md mt-1 mb-6 text-slate-400">Start your live camera stream or upload a traffic recording to execute real-time accident detection.</p>
+                <div class="flex flex-wrap gap-3 justify-center">
+                  <button id="btnStartWebcam" class="btn-cyber bg-slate-900 hover:bg-slate-800 text-white font-semibold dark:btn-hazard-orange">
+                    <span class="material-symbols-outlined text-[18px]">videocam</span>
+                    <span>Connect Camera</span>
+                  </button>
+                  <button id="btnUploadTrigger" class="btn-cyber btn-cyber-glass">
+                    <span class="material-symbols-outlined text-[18px]">upload_file</span>
+                    <span>Upload Video File</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Hidden File Input -->
+              <input type="file" id="videoFileInput" accept="video/mp4,video/avi,video/mov,video/webm" style="display:none;" />
+
+              <!-- Cyber HUD Scanlines and Target Reticle -->
+              <div class="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between bg-black/60">
+                <div class="flex items-center justify-between font-mono text-[11px] text-white">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur-sm border border-orange-500/40 text-orange-300">VISION AI SCAN</span>
+                    <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur-sm" id="hudConfidence">PROBABILITY: 0%</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-black/70 backdrop-blur-sm" id="hudGpsText">GPS: ACTIVE</span>
+                </div>
+
+                <div class="flex items-center justify-between text-white font-mono text-[11px]">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span> Object Tracking: Active
+                  </span>
+                  <span class="text-slate-400">Temporal Filter: 3 Frames</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Controls Toolbar -->
+            <div class="p-6 bg-slate-50 dark:bg-white/[0.02] flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 dark:border-white/10">
+              <div class="flex flex-wrap items-center gap-3">
+                <button id="btnWebcamToggleBar" class="btn-cyber bg-slate-900 hover:bg-slate-800 text-white font-semibold dark:btn-hazard-orange shadow-xs">
+                  <span class="material-symbols-outlined text-[18px]">videocam</span>
+                  <span>Start Live Camera</span>
+                </button>
+                <button id="btnUploadBar" class="btn-cyber btn-cyber-glass">
+                  <span class="material-symbols-outlined text-[18px]">upload_file</span>
+                  <span>Upload Archive</span>
+                </button>
+                <button id="btnSimulateCrash" class="btn-cyber btn-cyber-crimson">
+                  <span class="material-symbols-outlined text-[18px]">notification_important</span>
+                  <span>Simulate Collision Event</span>
+                </button>
+              </div>
+
+              <button onclick="triggerEmergencyAlertNow()" class="btn-cyber btn-hazard-orange">
+                <span class="material-symbols-outlined text-[20px]">emergency_share</span>
+                <span>Dispatch SOS Alert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Telemetry Acceleration & Proximity Chart -->
+          <div class="bento-card p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Dynamic Roadway G-Force & Proximity Telemetry</h3>
+                <p class="text-[12px] text-slate-500 dark:text-slate-400">Multi-point real-time sensor array measuring acceleration vector delta</p>
+              </div>
+              <span class="badge-neon badge-emerald">TELEMETRY: STABLE</span>
+            </div>
+
+            <!-- Interactive SVG Vector Chart in Hazard Orange -->
+            <div class="w-full h-28 bg-slate-50 dark:bg-black/50 rounded-xl p-2 flex items-end border border-slate-200 dark:border-white/10 relative overflow-hidden">
+              <svg class="w-full h-full text-orange-500" fill="none" preserveaspectratio="none" viewbox="0 0 700 80">
+                <defs>
+                  <linearGradient id="telemetryGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#F97316" stop-opacity="0.30"></stop>
+                    <stop offset="100%" stop-color="#F97316" stop-opacity="0.0"></stop>
+                  </linearGradient>
+                </defs>
+                <path d="M0,50 Q40,45 80,55 T160,40 T240,48 T320,38 T400,52 T480,45 T540,15 T580,70 T640,45 T700,48 L700,80 L0,80 Z" fill="url(#telemetryGrad)"></path>
+                <path d="M0,50 Q40,45 80,55 T160,40 T240,48 T320,38 T400,52 T480,45 T540,15 T580,70 T640,45 T700,48" stroke="#EA580C" stroke-linecap="round" stroke-width="2.5"></path>
+                <line opacity="0.5" stroke="#EF4444" stroke-dasharray="6 4" stroke-width="1.5" x1="0" x2="700" y1="20" y2="20"></line>
+                <circle class="animate-ping" cx="540" cy="15" fill="#EF4444" r="5"></circle>
+                <circle cx="540" cy="15" fill="#DC2626" r="4"></circle>
+              </svg>
+            </div>
+
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 font-mono text-[11px] pt-1">
+              <span>-60 SECONDS</span>
+              <span class="text-orange-600 dark:text-orange-400 font-bold">CRITICAL IMPACT SPIKE (DELTA-V: 42 KM/H)</span>
+              <span>CURRENT (LIVE)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 4 Columns: Active Warning Alert & Environment -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+
+          <!-- Active Accident Warning Card with Safety Diagonal Hazard Trim -->
+          <div id="activeAlertCard" class="bento-card p-6 bento-alert flex flex-col gap-4">
+            
+            <!-- Alert Banner -->
+            <div class="flex items-start gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-500/20 border border-orange-200 dark:border-orange-500/40 flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-orange-600 dark:text-orange-400 text-[28px] animate-pulse">car_crash</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="badge-neon badge-crimson w-fit">
+                  <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                  ACCIDENT ALERT
+                </span>
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white mt-1 leading-tight" id="alertCardTitle">PROBABLE ACCIDENT DETECTED</h3>
+              </div>
+            </div>
+
+            <!-- Telemetry Readouts -->
+            <div class="flex flex-col gap-2 bg-slate-50 dark:bg-black/50 p-4 rounded-xl text-[13px] border border-slate-200 dark:border-white/10 font-mono">
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 dark:text-slate-400">Confidence Factor:</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-500/25 dark:text-orange-300 font-bold border border-orange-200 dark:border-orange-500/40" id="alertCardConf">91% Probability</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-slate-500 dark:text-slate-400">Detection Time:</span>
+                <span class="text-slate-900 dark:text-white font-bold" id="alertCardTime">Live Detection</span>
+              </div>
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-slate-500 dark:text-slate-400 shrink-0">Coordinates:</span>
+                <span class="text-orange-600 dark:text-orange-400 text-right text-[12px] font-bold" id="alertCardCoords">Locating...</span>
+              </div>
+            </div>
+
+            <!-- Dispatch Status Box -->
+            <div class="p-3.5 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 flex items-center gap-3">
+              <span class="material-symbols-outlined text-orange-600 dark:text-orange-400 text-[24px]">local_police</span>
+              <div class="flex flex-col">
+                <span class="text-[10px] text-orange-800 dark:text-orange-300 uppercase tracking-wider font-mono font-bold">DISPATCH RELAY STATUS</span>
+                <span class="text-[12px] text-slate-900 dark:text-white font-bold" id="alertCardStatus">Emergency Responders Notified</span>
+              </div>
+            </div>
+
+            <!-- Evidence Snapshot Container -->
+            <div class="flex flex-col gap-1.5">
+              <span class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">Crash Evidence Snapshot:</span>
+              <div class="relative w-full h-36 rounded-xl overflow-hidden bg-slate-100 dark:bg-black/60 border border-slate-200 dark:border-white/10 shadow-inner group">
+                <img id="evidenceImagePreview" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoim_4ItJGcJTlTYKYirCxKQXwD8RAd_FuWIRYxUlZAI_VxrBEHdFlRydpVgiDBl4DaDmuVJBfCPIqs6sTYnD_Zg_xYGQm_STQT-RzEvJ8vR9wSJ4eLnqwnDPbNJCEio3oQcAlUFj6FYSgJkrdvn--Dy-taO6SGVl1b8iyZrkEcjFoVVAWfGuZ_a2prv9GKYZXRw8zWWpHnM4rHjqsDFqOsoASLCwjKFC4eDJYa1wjq84s6to4PT0h" alt="Evidence snapshot"/>
+                <div class="absolute bottom-2 left-2 bg-slate-900/80 dark:bg-black/80 backdrop-blur-sm px-2 py-0.5 rounded text-[10px] text-white dark:text-orange-300 font-mono" id="evidenceFrameLabel">
+                  FRAME CAPTURE
+                </div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-col gap-2 pt-2">
+              <button onclick="triggerEmergencyAlertNow()" class="btn-cyber btn-hazard-orange w-full py-3">
+                <span class="material-symbols-outlined text-[18px]">verified</span>
+                <span>Confirm & Dispatch EMS</span>
+              </button>
+              <button onclick="dismissActiveAlert()" class="btn-cyber btn-cyber-glass w-full py-2 text-[12px]">
+                <span class="material-symbols-outlined text-[16px]">close</span>
+                <span>Dismiss Alert</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Environmental Status Card -->
+          <div class="bento-card p-6 flex flex-col gap-3">
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Intersection Environment</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-slate-50 dark:bg-black/40 p-3 rounded-xl border border-slate-200/80 dark:border-white/5 flex flex-col">
+                <span class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">Road Surface</span>
+                <span class="text-[13px] font-bold text-slate-900 dark:text-white flex items-center gap-1 mt-1">
+                  <span class="material-symbols-outlined text-[16px] text-amber-500 dark:text-amber-400">rainy</span> Wet / Slick
+                </span>
+              </div>
+              <div class="bg-slate-50 dark:bg-black/40 p-3 rounded-xl border border-slate-200/80 dark:border-white/5 flex flex-col">
+                <span class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">Visibility</span>
+                <span class="text-[13px] font-bold text-slate-900 dark:text-white flex items-center gap-1 mt-1">
+                  <span class="material-symbols-outlined text-[16px] text-orange-500 dark:text-orange-400">wb_twilight</span> Dusk (3.8 km)
+                </span>
+              </div>
+              <div class="bg-slate-50 dark:bg-black/40 p-3 rounded-xl border border-slate-200/80 dark:border-white/5 flex flex-col">
+                <span class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">Traffic Flow</span>
+                <span class="text-[13px] font-bold text-slate-900 dark:text-orange-400 mt-1">Active CCTV Stream</span>
+              </div>
+              <div class="bg-slate-50 dark:bg-black/40 p-3 rounded-xl border border-slate-200/80 dark:border-white/5 flex flex-col">
+                <span class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">AI Core Engine</span>
+                <span class="text-[13px] font-bold text-emerald-600 dark:text-emerald-400 mt-1">OpenCV Shockwave</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Recent Incidents History Table / List Section -->
+      <section class="flex flex-col gap-4 pt-4" id="incidents-section">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Recent Incidents & Detection Audit Log</h2>
+            <p class="text-[13px] text-slate-500 dark:text-slate-400">Autonomous persistence, confidence scoring, and emergency responder dispatch log</p>
+          </div>
+
+          <!-- Filter Pills & Action Group -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="loadIncidents('all')" class="filter-btn btn-cyber bg-slate-900 text-white dark:btn-hazard-orange py-1.5 px-4 text-[12px] font-semibold" data-status="all">All Events</button>
+            <button onclick="loadIncidents('detected')" class="filter-btn btn-cyber btn-cyber-glass py-1.5 px-4 text-[12px]" data-status="detected">Probable Accidents</button>
+            <button onclick="loadIncidents('reviewed')" class="filter-btn btn-cyber btn-cyber-glass py-1.5 px-4 text-[12px]" data-status="reviewed">Reviewed</button>
+            <span class="w-[1px] h-5 bg-slate-200 dark:bg-white/20 mx-1 hidden sm:inline-block"></span>
+            <button onclick="exportAllIncidentsCSV()" class="btn-cyber btn-cyber-glass py-1.5 px-3.5 text-[12px]" title="Export Incident Log as CSV">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              <span>Export CSV</span>
+            </button>
+            <button onclick="resetAllIncidents()" class="btn-cyber bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30 dark:hover:bg-rose-500/30 py-1.5 px-3.5 text-[12px] font-semibold" title="Purge Incident Database">
+              <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+              <span>Clear All</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Incidents List Container -->
+        <div class="flex flex-col gap-3" id="incidentsList">
+          <!-- Dynamically populated via app.js -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Incident Details Modal -->
+  <div class="modal-backdrop" id="incidentDetailModal">
+    <div class="bento-card max-w-2xl w-full p-8 border-slate-200 dark:border-orange-500/40 relative max-h-[90vh] overflow-y-auto">
+      <button class="modal-close absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-white/20 font-bold text-[18px]">&times;</button>
+      <div id="incidentModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Settings & Emergency Contacts Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="bento-card max-w-xl w-full p-8 border-slate-200 dark:border-orange-500/40 relative max-h-[90vh] overflow-y-auto">
+      <button class="modal-close absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-white/20 font-bold text-[18px]">&times;</button>
+      <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-4">Emergency Responders & AI Sensitivity</h3>
+
+      <div class="mb-6">
+        <h4 class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider font-bold">Active Emergency Contacts</h4>
+        <div id="contactsList" class="flex flex-col gap-2 mb-3"></div>
+
+        <div class="bg-slate-50 dark:bg-black/50 p-4 rounded-xl border border-slate-200 dark:border-white/10 flex flex-col gap-2.5">
+          <h5 class="text-[13px] font-extrabold text-slate-900 dark:text-white">Add New Emergency Responder</h5>
+          <input type="text" id="newContactName" placeholder="Agency or Responder Name" class="px-3 py-2 rounded-lg bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-[13px] focus:outline-none focus:border-orange-500"/>
+          <input type="text" id="newContactPhone" placeholder="Phone Number (+1-...)" class="px-3 py-2 rounded-lg bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-[13px] focus:outline-none focus:border-orange-500"/>
+          <input type="email" id="newContactEmail" placeholder="Email Address" class="px-3 py-2 rounded-lg bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-[13px] focus:outline-none focus:border-orange-500"/>
+          <button onclick="addNewContact()" class="btn-cyber btn-hazard-orange py-2.5 mt-1 text-[13px] w-full">+ Add Emergency Responder</button>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-4">
+        <h4 class="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 tracking-wider font-bold">AI Sensitivity Configuration</h4>
+        <div>
+          <div class="flex justify-between text-[13px] font-bold mb-1 font-mono text-slate-800 dark:text-slate-200">
+            <span>Accident Trigger Confidence:</span>
+            <span id="valThreshold" class="text-orange-600 dark:text-orange-400 font-extrabold">70%</span>
+          </div>
+          <input type="range" id="inputThreshold" min="0.4" max="0.95" step="0.05" value="0.70" class="w-full accent-orange-500" oninput="document.getElementById('valThreshold').textContent = Math.round(this.value*100)+'%'">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 block mb-1 font-bold">Required Positive Frames</label>
+            <input type="number" id="inputFrames" min="1" max="10" value="3" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white font-mono text-[13px] font-bold"/>
+          </div>
+          <div>
+            <label class="text-[10px] font-mono uppercase text-slate-500 dark:text-slate-400 block mb-1 font-bold">Cooldown Duration (Sec)</label>
+            <input type="number" id="inputCooldown" min="10" max="300" value="60" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white font-mono text-[13px] font-bold"/>
+          </div>
+        </div>
+
+        <button onclick="saveSettings()" class="btn-cyber btn-hazard-orange py-3 w-full font-bold">Save System Configuration</button>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2">
+          <h4 class="text-[11px] font-mono uppercase text-rose-600 dark:text-rose-400 tracking-wider font-bold">Database Reset</h4>
+          <p class="text-[12px] text-slate-500 dark:text-slate-400">Purge all recorded incidents and evidence links to reset the baseline.</p>
+          <button onclick="resetAllIncidents()" class="btn-cyber bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30 dark:hover:bg-rose-500/30 py-2 w-full text-[13px] font-semibold">
+            <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+            <span>Purge All Incidents & Reset Stats</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Cheatsheet Modal -->
+  <div class="modal-backdrop" id="shortcutsModal">
+    <div class="bento-card max-w-md w-full p-6 border-slate-200 dark:border-orange-500/40 relative">
+      <button class="modal-close absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-white/20">&times;</button>
+      <div class="flex items-center gap-2 mb-4 text-orange-600 dark:text-orange-400">
+        <span class="material-symbols-outlined text-[24px]">keyboard</span>
+        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Keyboard Command Matrix</h3>
+      </div>
+      <div class="grid grid-cols-1 gap-2 font-mono text-[12px]">
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Toggle Light / Dark Theme</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">D</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Toggle Live Camera Feed</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">C</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Simulate Collision Event</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">T</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Mute / Unmute Siren Audio</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">M</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Open Settings & Contacts</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">S</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Switch 3D Camera Angles</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">1 – 4</kbd>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5">
+          <span class="text-slate-700 dark:text-slate-300">Dismiss Modals</span>
+          <kbd class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-white/10 text-orange-600 dark:text-orange-400 font-bold border border-slate-300 dark:border-white/10">Esc</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/scene3d.js?v=2.1"></script>
+  <script src="/static/js/app.js?v=2.1"></script>
+
+  <!-- Live Clock & Stream Controls Helper -->
+  <script>
+    function updateClock() {
+      const clock = document.getElementById('live-clock');
+      if (clock) {
+        const d = new Date();
+        clock.textContent = d.toLocaleTimeString('en-US', { hour12: true });
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Wire buttons
+    document.getElementById('btnWebcamToggleBar')?.addEventListener('click', toggleWebcam);
+    document.getElementById('btnUploadBar')?.addEventListener('click', () => document.getElementById('videoFileInput').click());
+
+    function dismissActiveAlert() {
+      const card = document.getElementById('activeAlertCard');
+      if (card) {
+        card.style.opacity = '0.4';
+        setTimeout(() => { card.style.opacity = '1'; }, 3000);
+      }
+      showToast('Alert temporarily dismissed', 'info');
+    }
+
+    function triggerEmergencyAlertNow() {
+      simulateAccidentTrigger();
+    }
+  </script>
+</body>
+</html>

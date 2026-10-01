@@ -13,3 +13,4 @@ evidence/*
 accidents.db
 model/*.pt
 .DS_Store
+.agents/
